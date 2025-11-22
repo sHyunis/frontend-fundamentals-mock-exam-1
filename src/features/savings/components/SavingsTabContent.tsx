@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { Tab } from 'tosslib';
 import { ProductList } from './ProductList';
 import { CalculationResult } from './CalculationResult';
 import { LoadingSpinner } from '../../../shared/components/LoadingSpinner';
 import type { SavingsProduct } from '../types';
+import type { FilterFormValues } from '../schemas/filterSchema';
 
 const TAB = {
   PRODUCTS: 'products',
@@ -16,18 +18,12 @@ type TabValue = (typeof TAB)[keyof typeof TAB];
 interface SavingsTabContentProps {
   isLoading: boolean;
   filteredProducts: SavingsProduct[];
-  goalAmount: number;
-  monthlyAmount: number;
-  termMonths: number;
 }
 
-export function SavingsTabContent({
-  isLoading,
-  filteredProducts,
-  goalAmount,
-  monthlyAmount,
-  termMonths,
-}: SavingsTabContentProps) {
+export function SavingsTabContent({ isLoading, filteredProducts }: SavingsTabContentProps) {
+  const { control } = useFormContext<FilterFormValues>();
+  const { goalAmount = 0, monthlyAmount = 0, termMonths = 12 } = useWatch({ control });
+
   const [activeTab, setActiveTab] = useState<TabValue>(TAB.PRODUCTS);
   const [selectedProduct, setSelectedProduct] = useState<SavingsProduct | null>(null);
 

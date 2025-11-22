@@ -1,18 +1,27 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Border, colors, ListRow, Spacing } from 'tosslib';
 import { useSavingsProducts } from '../features/savings/hooks/useSavingsProducts';
 import { filterProducts } from '../features/savings/utils/filter';
 import { Header } from '../features/savings/components/Header';
 import { FilterForm } from '../features/savings/components/FilterForm';
 import { SavingsTabContent } from '../features/savings/components/SavingsTabContent';
+import { filterSchema, type FilterFormValues } from '../features/savings/schemas/filterSchema';
 
 export function SavingsCalculatorPage() {
   const { data: savingsProducts = [], isLoading, error } = useSavingsProducts();
 
-  const [goalAmount, setGoalAmount] = useState<number>(0);
-  const [monthlyAmount, setMonthlyAmount] = useState<number>(0);
-  const [termMonths, setTermMonths] = useState<number>(12);
+  const form = useForm<FilterFormValues>({
+    resolver: zodResolver(filterSchema),
+    defaultValues: {
+      goalAmount: 0,
+      monthlyAmount: 0,
+      termMonths: 12,
+    },
+  });
+
+  const { monthlyAmount = 0, termMonths = 12 } = useWatch({ control: form.control });
 
   const filteredProducts =
     monthlyAmount <= 0
@@ -37,30 +46,19 @@ export function SavingsCalculatorPage() {
   }
 
   return (
-    <PageContainer>
-      <Header />
+    <FormProvider {...form}>
+      <PageContainer>
+        <Header />
 
-      <FilterForm
-        goalAmount={goalAmount}
-        monthlyAmount={monthlyAmount}
-        termMonths={termMonths}
-        onGoalAmountChange={setGoalAmount}
-        onMonthlyAmountChange={setMonthlyAmount}
-        onTermMonthsChange={setTermMonths}
-      />
+        <FilterForm />
 
-      <Spacing size={24} />
-      <Border height={16} />
-      <Spacing size={8} />
+        <Spacing size={24} />
+        <Border height={16} />
+        <Spacing size={8} />
 
-      <SavingsTabContent
-        isLoading={isLoading}
-        filteredProducts={filteredProducts}
-        goalAmount={goalAmount}
-        monthlyAmount={monthlyAmount}
-        termMonths={termMonths}
-      />
-    </PageContainer>
+        <SavingsTabContent isLoading={isLoading} filteredProducts={filteredProducts} />
+      </PageContainer>
+    </FormProvider>
   );
 }
 
