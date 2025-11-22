@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
-import { Border, colors, ListRow, Spacing, Tab } from 'tosslib';
+import { Border, colors, ListRow, Spacing } from 'tosslib';
 import { useSavingsProducts } from '../features/savings/hooks/useSavingsProducts';
 import { filterProducts } from '../features/savings/utils/filter';
 import { Header } from '../features/savings/components/Header';
 import { FilterForm } from '../features/savings/components/FilterForm';
-import { ProductList } from '../features/savings/components/ProductList';
-import { LoadingSpinner } from '../shared/components/LoadingSpinner';
-import type { SavingsProduct } from '../features/savings/types';
+import { SavingsTabContent } from '../features/savings/components/SavingsTabContent';
 
 export function SavingsCalculatorPage() {
   const { data: savingsProducts = [], isLoading, error } = useSavingsProducts();
@@ -15,7 +13,6 @@ export function SavingsCalculatorPage() {
   const [goalAmount, setGoalAmount] = useState<number>(0);
   const [monthlyAmount, setMonthlyAmount] = useState<number>(0);
   const [termMonths, setTermMonths] = useState<number>(12);
-  const [selectedProduct, setSelectedProduct] = useState<SavingsProduct | null>(null);
 
   const filteredProducts =
     monthlyAmount <= 0
@@ -56,26 +53,13 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab onChange={() => {}}>
-        <Tab.Item value="products" selected={true}>
-          적금 상품
-        </Tab.Item>
-        <Tab.Item value="results" selected={false}>
-          계산 결과
-        </Tab.Item>
-      </Tab>
-
-      <ContentArea>
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <ProductList
-            products={filteredProducts}
-            selectedProductId={selectedProduct?.id ?? null}
-            onSelectProduct={setSelectedProduct}
-          />
-        )}
-      </ContentArea>
+      <SavingsTabContent
+        isLoading={isLoading}
+        filteredProducts={filteredProducts}
+        goalAmount={goalAmount}
+        monthlyAmount={monthlyAmount}
+        termMonths={termMonths}
+      />
     </PageContainer>
   );
 }
@@ -84,10 +68,4 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-`;
-
-const ContentArea = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 `;
