@@ -7,6 +7,7 @@ import { Header } from '../features/savings/components/Header';
 import { FilterForm } from '../features/savings/components/FilterForm';
 import { ProductList } from '../features/savings/components/ProductList';
 import { LoadingSpinner } from '../shared/components/LoadingSpinner';
+import type { SavingsProduct } from '../features/savings/types';
 
 export function SavingsCalculatorPage() {
   const { data: savingsProducts = [], isLoading, error } = useSavingsProducts();
@@ -14,6 +15,7 @@ export function SavingsCalculatorPage() {
   const [goalAmount, setGoalAmount] = useState<number>(0);
   const [monthlyAmount, setMonthlyAmount] = useState<number>(0);
   const [termMonths, setTermMonths] = useState<number>(12);
+  const [selectedProduct, setSelectedProduct] = useState<SavingsProduct | null>(null);
 
   const filteredProducts =
     monthlyAmount <= 0
@@ -63,7 +65,17 @@ export function SavingsCalculatorPage() {
         </Tab.Item>
       </Tab>
 
-      <ContentArea>{isLoading ? <LoadingSpinner /> : <ProductList products={filteredProducts} />}</ContentArea>
+      <ContentArea>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <ProductList
+            products={filteredProducts}
+            selectedProductId={selectedProduct?.id ?? null}
+            onSelectProduct={setSelectedProduct}
+          />
+        )}
+      </ContentArea>
     </PageContainer>
   );
 }
