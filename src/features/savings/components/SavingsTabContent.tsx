@@ -31,6 +31,10 @@ export function SavingsTabContent({
   const [activeTab, setActiveTab] = useState<TabValue>(TAB.PRODUCTS);
   const [selectedProduct, setSelectedProduct] = useState<SavingsProduct | null>(null);
 
+  const handleSelectProduct = (product: SavingsProduct) => {
+    setSelectedProduct(prev => (prev?.id === product.id ? null : product));
+  };
+
   return (
     <>
       <Tab onChange={(value: string) => setActiveTab(value as TabValue)}>
@@ -49,7 +53,7 @@ export function SavingsTabContent({
           <ProductList
             products={filteredProducts}
             selectedProductId={selectedProduct?.id ?? null}
-            onSelectProduct={setSelectedProduct}
+            onSelectProduct={handleSelectProduct}
           />
         ) : (
           <CalculationResult
@@ -58,7 +62,7 @@ export function SavingsTabContent({
             monthlyAmount={monthlyAmount}
             termMonths={termMonths}
             filteredProducts={filteredProducts}
-            onSelectProduct={setSelectedProduct}
+            onSelectProduct={handleSelectProduct}
           />
         )}
       </ContentArea>

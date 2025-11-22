@@ -141,7 +141,7 @@ function RecommendedProductItem({ product, isSelected, onSelect }: RecommendedPr
           bottomProps={{ fontSize: 13, color: colors.grey600 }}
         />
       }
-      right={isSelected ? <Checkbox.Circle checked /> : undefined}
+      right={isSelected && <Checkbox.Circle checked readOnly />}
     />
   );
 }
