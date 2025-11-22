@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { Checkbox, colors, ListRow } from 'tosslib';
 import type { SavingsProduct } from '../types';
 import { formatNumberWithCommas } from '../../../utils/format';
@@ -50,7 +51,19 @@ function ProductListItem({ product, isSelected, onSelect }: ProductListItemProps
           bottomProps={{ fontSize: 13, color: colors.grey600 }}
         />
       }
-      right={isSelected ? <Checkbox.Circle checked readOnly /> : undefined}
+      right={
+        <CheckboxWrapper isVisible={isSelected}>
+          <Checkbox.Circle checked readOnly />
+        </CheckboxWrapper>
+      }
     />
   );
 }
+
+const CheckboxWrapper = styled.div<{ isVisible: boolean }>`
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transform: ${({ isVisible }) => (isVisible ? 'scale(1)' : 'scale(0.8)')};
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+`;
