@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Border, Checkbox, colors, ListHeader, ListRow, Spacing } from 'tosslib';
 import type { SavingsProduct } from '../types';
-import { formatNumberWithCommas } from '../../../shared/components/utils/format';
+import { formatNumberWithCommas } from '../../../shared/utils/format';
 import { getTopProductsByRate } from '../utils/filter';
 
 interface CalculationResultProps {

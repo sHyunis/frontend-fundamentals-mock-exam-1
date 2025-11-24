@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Checkbox, colors, ListRow } from 'tosslib';
 import type { SavingsProduct } from '../types';
-import { formatNumberWithCommas } from '../../../shared/components/utils/format';
+import { formatNumberWithCommas } from '../../../shared/utils/format';
 
 interface ProductListProps {
   products: SavingsProduct[];

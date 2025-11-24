@@ -1,6 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 import { SelectBottomSheet, Spacing, TextField } from 'tosslib';
-import { formatNumberWithCommas, parseNumericString } from '../../../shared/components/utils/format';
+import { formatNumberWithCommas, parseNumericString } from '../../../shared/utils/format';
 import type { FilterFormValues } from '../schemas/filterSchema';
 
 export function FilterForm() {
