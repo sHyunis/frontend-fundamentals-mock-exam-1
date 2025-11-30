@@ -18,13 +18,7 @@ export function CalculationResult({ selectedProductId }: CalculationResultProps)
     })
   );
 
-  if (!selectedProductId) {
-    return <EmptyMessage>상품을 선택해주세요.</EmptyMessage>;
-  }
-
-  const savingProduct = data[0];
-
-  if (savingProduct == null) {
+  if (data.length === 0) {
     return <EmptyMessage>상품을 선택해주세요.</EmptyMessage>;
   }
 
@@ -32,6 +26,7 @@ export function CalculationResult({ selectedProductId }: CalculationResultProps)
     return <EmptyMessage>목표 금액을 입력해주세요.</EmptyMessage>;
   }
 
+  const savingProduct = data[0];
   const annualRate = savingProduct.annualRate / 100;
   const expectedAmount = Math.round(monthlyAmount * savingsTerms * (1 + annualRate * 0.5));
   const difference = goalAmount - expectedAmount;
