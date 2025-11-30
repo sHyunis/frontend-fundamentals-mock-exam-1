@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Suspense, useState } from 'react';
-import { Border, ListHeader, ListRow, NavigationBar, Spacing, Tab } from 'tosslib';
+import { Assets, Border, ListHeader, ListRow, NavigationBar, Spacing, Tab } from 'tosslib';
 import { match } from 'ts-pattern';
 import { AmountInput } from './components/AmountInput';
 import { CalculationResult } from './components/CalculationResult';
@@ -19,8 +19,16 @@ export function SavingsCalculatorPage() {
     setSavingsParams,
   } = useSavingsStates();
 
+  const isInitialState = goalAmount === 0 && monthlyAmount === 0 && savingsTerms === 12;
+
   return (
     <PageContainer>
+      <ResetButton
+        onClick={() => setSavingsParams({ goalAmount: 0, monthlyAmount: 0, savingsTerms: 12 })}
+        disabled={isInitialState}
+      >
+        <Assets.Icon name="icon-refresh" css={{ opacity: isInitialState ? 0.5 : 1 }} />
+      </ResetButton>
       <NavigationBar title="적금 계산기" />
       <Spacing size={16} />
 
@@ -101,4 +109,15 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+`;
+
+const ResetButton = styled.button<{ disabled?: boolean }>`
+  position: absolute;
+  top: 8px;
+  right: 36px;
+  width: 24px;
+  height: 24px;
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  border: none;
+  background: none;
 `;
