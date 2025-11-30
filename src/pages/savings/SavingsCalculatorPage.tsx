@@ -70,7 +70,10 @@ export function SavingsCalculatorPage() {
         .with(SAVING_TABS.results, () => (
           <>
             <Spacing size={8} />
-            <CalculationResult selectedProductId={selectedProductId} />
+            <CalculationResult
+              selectedProductId={selectedProductId}
+              state={{ goalAmount, monthlyAmount, savingsTerms }}
+            />
             <Spacing size={8} />
             <Border height={16} />
             <Spacing size={8} />

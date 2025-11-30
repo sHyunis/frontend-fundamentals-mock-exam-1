@@ -6,3 +6,9 @@ export interface SavingsProduct {
   maxMonthlyAmount: number;
   availableTerms: number;
 }
+
+export interface SavingsState {
+  goalAmount: number;
+  monthlyAmount: number;
+  savingsTerms: number;
+}

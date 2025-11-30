@@ -2,14 +2,14 @@ import styled from '@emotion/styled';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { colors, ListRow } from 'tosslib';
 import { getSavingsProductsQueryOptions } from '../hooks/useSavingsProductsQueryOptions';
-import { useSavingsStates } from '../hooks/useSavingsStates';
+import { SavingsState } from '../types';
 
 interface CalculationResultProps {
   selectedProductId: string | null;
+  state: SavingsState;
 }
 
-export function CalculationResult({ selectedProductId }: CalculationResultProps) {
-  const { state } = useSavingsStates();
+export function CalculationResult({ selectedProductId, state }: CalculationResultProps) {
   const { goalAmount, monthlyAmount, savingsTerms } = state;
 
   const { data } = useSuspenseQuery(
@@ -27,6 +27,7 @@ export function CalculationResult({ selectedProductId }: CalculationResultProps)
   }
 
   const savingProduct = data[0];
+
   const annualRate = savingProduct.annualRate / 100;
   const expectedAmount = Math.round(monthlyAmount * savingsTerms * (1 + annualRate * 0.5));
   const difference = goalAmount - expectedAmount;
