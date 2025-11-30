@@ -1,23 +1,41 @@
 import styled from '@emotion/styled';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { colors, ListRow } from 'tosslib';
-import type { SavingsProduct } from '../types';
+import { getSavingsProductsQueryOptions } from '../hooks/useSavingsProductsQueryOptions';
+import { useSavingsStates } from '../hooks/useSavingsStates';
 
 interface CalculationResultProps {
-  selectedProduct: SavingsProduct | null;
-  goalAmount: number;
-  monthlyAmount: number;
-  termMonths: number;
+  selectedProductId: string | null;
 }
 
-export function CalculationResult({ selectedProduct, goalAmount, monthlyAmount, termMonths }: CalculationResultProps) {
-  if (!selectedProduct) {
+export function CalculationResult({ selectedProductId }: CalculationResultProps) {
+  const { state } = useSavingsStates();
+  const { goalAmount, monthlyAmount, savingsTerms } = state;
+
+  const { data } = useSuspenseQuery(
+    getSavingsProductsQueryOptions({
+      filters: selectedProductId ? [x => x.id === selectedProductId] : undefined,
+    })
+  );
+
+  if (!selectedProductId) {
     return <EmptyMessage>상품을 선택해주세요.</EmptyMessage>;
   }
 
-  const annualRate = selectedProduct.annualRate;
-  const expectedAmount = Math.round(monthlyAmount * termMonths * (1 + annualRate * 0.5));
+  const savingProduct = data[0];
+
+  if (savingProduct == null) {
+    return <EmptyMessage>상품을 선택해주세요.</EmptyMessage>;
+  }
+
+  if (goalAmount == null || goalAmount === 0) {
+    return <EmptyMessage>목표 금액을 입력해주세요.</EmptyMessage>;
+  }
+
+  const annualRate = savingProduct.annualRate / 100;
+  const expectedAmount = Math.round(monthlyAmount * savingsTerms * (1 + annualRate * 0.5));
   const difference = goalAmount - expectedAmount;
-  const recommendedMonthly = Math.round(goalAmount / (termMonths * (1 + annualRate * 0.5)) / 1000) * 1000;
+  const recommendedMonthly = Math.round(goalAmount / (savingsTerms * (1 + annualRate * 0.5)) / 1000) * 1000;
 
   return (
     <>
